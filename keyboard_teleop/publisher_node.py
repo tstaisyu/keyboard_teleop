@@ -6,7 +6,7 @@ from pynput import keyboard
 class KeyboardPublisher(Node):
     def __init__(self):
         super().__init__('keyboard_publisher')
-        self.publisher_ = self.create_publisher(String, 'motor_control', 10)
+        self.publisher_ = self.create_publisher(String, '/motor_control', 10)
         self.listener = keyboard.Listener(on_press=self.on_press)
         self.listener.start()
 
