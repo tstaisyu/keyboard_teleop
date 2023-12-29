@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'publisher_node = keyboard_teleop.publisher_node:main'
         ],
     },
 )

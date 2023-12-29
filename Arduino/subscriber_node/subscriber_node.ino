@@ -36,18 +36,33 @@ void subscription_callback(const void * msgin) {
     case 1: // forward
       motor_R.setSpeed(255);
       motor_L.setSpeed(255);
+      M5.Lcd.setCursor(0, 20);
+      M5.Lcd.print("Moving Forward ");
       break;
     case 2: // backward
       motor_R.setSpeed(-255);
       motor_L.setSpeed(-255);
+      M5.Lcd.setCursor(0, 20);
+      M5.Lcd.print("Moving Backward");
       break;
     case 3: // left
       motor_R.setSpeed(255);
-      motor_L.setSpeed(255);
+      motor_L.setSpeed(-255);
+      M5.Lcd.setCursor(0, 20);
+      M5.Lcd.print("Turning Left   ");
       break;
     case 4: // right
       motor_R.setSpeed(-255);
-      motor_L.setSpeed(-255);
+      motor_L.setSpeed(255);
+      M5.Lcd.setCursor(0, 20);
+      M5.Lcd.print("Turning Right  ");
+      break;
+    default:
+      // stop or undefined command
+      motor_R.setSpeed(0);
+      motor_L.setSpeed(0);
+      M5.Lcd.setCursor(0, 20);
+      M5.Lcd.print("Stopped        ");
       break;
   }
 }
