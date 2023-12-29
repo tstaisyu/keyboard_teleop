@@ -32,6 +32,12 @@ CytronMD motor_L(PWM_DIR, motorLPin1, motorLPin2);
 
 void subscription_callback(const void * msgin) {
   const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
+
+  Serial.print("Received command: ");  // 受信したコマンドをシリアル出力
+  Serial.println(msg->data);
+  
+  M5.Lcd.clear();  // LCD画面をクリア
+  M5.Lcd.setCursor(0, 20);  // テキスト表示位置を設定
   switch (msg->data) {
     case 1: // forward
       motor_R.setSpeed(255);
@@ -70,6 +76,7 @@ void subscription_callback(const void * msgin) {
 void setup() {
   M5.begin();
   M5.Lcd.setTextSize(2);
+  M5.Lcd.setCursor(0, 0);  // ステータスメッセージの位置を設定
   M5.Lcd.print("micro ROS2 M5Stack START\n");  
   set_microros_transports();
 

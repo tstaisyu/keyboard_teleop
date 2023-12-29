@@ -11,17 +11,26 @@ class KeyboardPublisher(Node):
         self.listener.start()
 
     def on_press(self, key):
-        if key == keyboard.Key.up:
-            self.publish_command(1)  # forward
-        elif key == keyboard.Key.down:
-            self.publish_command(2)  # backward
-        elif key == keyboard.Key.left:
-            self.publish_command(3)  # left
-        elif key == keyboard.Key.right:
-            self.publish_command(4)  # right
-        elif key == keyboard.Key.esc:
-            self.publish_command(0)  # stop
-            return False
+        self.get_logger().info("Key pressed")  # デバッグ用のログ出力
+        try:
+            if key == keyboard.Key.up:
+                self.publish_command(1)  # forward
+                self.get_logger().info("Moving Forward")
+            elif key == keyboard.Key.down:
+                self.publish_command(2)  # backward
+                self.get_logger().info("Moving Backward")
+            elif key == keyboard.Key.left:
+                self.publish_command(3)  # left
+                self.get_logger().info("Turning Left")
+            elif key == keyboard.Key.right:
+                self.publish_command(4)  # right
+                self.get_logger().info("Turning Right")
+            elif key == keyboard.Key.esc:
+                self.publish_command(0)  # stop
+                self.get_logger().info("Stopping")
+                return False
+        except Exception as e:
+            self.get_logger().error('Error: {}'.format(e))
 
     def publish_command(self, command):
         msg = Int32()
