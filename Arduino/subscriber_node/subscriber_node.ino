@@ -31,11 +31,12 @@ CytronMD motor_R(PWM_DIR, motorRPin1, motorRPin2);
 CytronMD motor_L(PWM_DIR, motorLPin1, motorLPin2);
 
 void subscription_callback(const void * msgin) {
+  Serial.println("Callback triggered");  // シリアル出力
   const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
 
   Serial.print("Received command: ");  // 受信したコマンドをシリアル出力
   Serial.println(msg->data);
-  
+
   M5.Lcd.clear();  // LCD画面をクリア
   M5.Lcd.setCursor(0, 20);  // テキスト表示位置を設定
   switch (msg->data) {
@@ -74,6 +75,9 @@ void subscription_callback(const void * msgin) {
 }
 
 void setup() {
+  Serial.begin(115200);  // シリアル通信の初期化
+  while(!Serial);  // シリアルポートが開くのを待つ
+
   M5.begin();
   M5.Lcd.setTextSize(2);
   M5.Lcd.setCursor(0, 0);  // ステータスメッセージの位置を設定
