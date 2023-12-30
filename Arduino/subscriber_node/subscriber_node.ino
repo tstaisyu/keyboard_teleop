@@ -92,16 +92,13 @@ void setup() {
   allocator = rcl_get_default_allocator();
 
   RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
-<<<<<<< HEAD
-  RCCHECK(rclc_node_init_default(&node, "subscriber_node", "", &support));
-=======
 
 	rcl_init_options_t init_options = rcl_get_zero_initialized_init_options();
 	RCCHECK(rcl_init_options_init(&init_options, allocator));
 	RCCHECK(rcl_init_options_set_domain_id(&init_options, 117));		// ドメインIDの設定
 	RCCHECK(rclc_support_init_with_options(&support, 0, NULL, &init_options, &allocator)); // 前のrclc_support_initは削除する
-  RCCHECK(rclc_node_init_default(&node, "m5stack_motor_control", "", &support));
->>>>>>> f81b01e69745a09fb13c43ad6c43dc4dec27323e
+  RCCHECK(rclc_node_init_default(&node, "subscriber_node", "", &support));
+
 
   RCCHECK(rclc_subscription_init_default(
     &subscriber,
