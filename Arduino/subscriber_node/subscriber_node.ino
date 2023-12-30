@@ -82,11 +82,21 @@ void setup() {
   M5.Lcd.setTextSize(2);
   M5.Lcd.setCursor(0, 0);  // ステータスメッセージの位置を設定
   M5.Lcd.print("micro ROS2 M5Stack START\n");  
-  set_microros_transports();
+	// Wi-Fi経由の場合
+	//set_microros_wifi_transports("SSID", "PWD", "IP", Port);
+	// USB経由の場合
+	set_microros_transports();
+
+  delay(2000);
 
   allocator = rcl_get_default_allocator();
 
   RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
+
+	rcl_init_options_t init_options = rcl_get_zero_initialized_init_options();
+	RCCHECK(rcl_init_options_init(&init_options, allocator));
+	RCCHECK(rcl_init_options_set_domain_id(&init_options, 117));		// ドメインIDの設定
+	RCCHECK(rclc_support_init_with_options(&support, 0, NULL, &init_options, &allocator)); // 前のrclc_support_initは削除する
   RCCHECK(rclc_node_init_default(&node, "m5stack_motor_control", "", &support));
 
   RCCHECK(rclc_subscription_init_default(
@@ -95,7 +105,9 @@ void setup() {
     ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
     "/motor_control"));
 
-  RCCHECK(rclc_executor_init(&executor, &support.context, 1, &allocator));
+	int callback_size = 1;	// コールバックを行う数
+	executor = rclc_executor_get_zero_initialized_executor();
+  RCCHECK(rclc_executor_init(&executor, &support.context, callback_size, &allocator));
   RCCHECK(rclc_executor_add_subscription(&executor, &subscriber, &msg, &subscription_callback, ON_NEW_DATA));
 }
 
