@@ -19,7 +19,7 @@ rcl_allocator_t allocator;
 rcl_node_t node;
 rcl_timer_t timer;
 
-#define RCCHECK(fn) { rcl_ret_t temp_rc = fn;}
+#define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if ((temp_rc != RCL_RET_OK)) {Serial.println("Error in " #fn); return;}}
 #define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){}}
 
 const int motorRPin1 = 25;
@@ -37,7 +37,7 @@ void subscription_callback(const void * msgin) {
   M5.Lcd.print("Received command: ");  // 受信したコマンドをシリアル出力
   M5.Lcd.println(msg->data);
 
-  M5.Lcd.clear();  // LCD画面をクリア
+//  M5.Lcd.clear();  // LCD画面をクリア
   M5.Lcd.setCursor(0, 20);  // テキスト表示位置を設定
   switch (msg->data) {
     case 1: // forward
@@ -113,6 +113,6 @@ void setup() {
 }
 
 void loop() {
-  delay(100);
+  delay(10);
   RCCHECK(rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100)));
 }
