@@ -34,8 +34,8 @@ void subscription_callback(const void * msgin) {
   Serial.println("Callback triggered");  // シリアル出力
   const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
 
-  Serial.print("Received command: ");  // 受信したコマンドをシリアル出力
-  Serial.println(msg->data);
+  M5.Lcd.print("Received command: ");  // 受信したコマンドをシリアル出力
+  M5.Lcd.println(msg->data);
 
   M5.Lcd.clear();  // LCD画面をクリア
   M5.Lcd.setCursor(0, 20);  // テキスト表示位置を設定
@@ -87,7 +87,7 @@ void setup() {
   allocator = rcl_get_default_allocator();
 
   RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
-  RCCHECK(rclc_node_init_default(&node, "m5stack_motor_control", "", &support));
+  RCCHECK(rclc_node_init_default(&node, "subscriber_node", "", &support));
 
   RCCHECK(rclc_subscription_init_default(
     &subscriber,
@@ -100,6 +100,6 @@ void setup() {
 }
 
 void loop() {
+  delay(100);
   RCCHECK(rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100)));
-  delay(10);
 }
