@@ -19,7 +19,7 @@ rcl_allocator_t allocator;
 rcl_node_t node;
 rcl_timer_t timer;
 
-#define RCCHECK(fn) { rcl_ret_t temp_rc = fn;}
+#define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if ((temp_rc != RCL_RET_OK)) {Serial.println("Error in " #fn); return;}}
 #define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){}}
 
 const int motorRPin1 = 25;
@@ -34,10 +34,10 @@ void subscription_callback(const void * msgin) {
   Serial.println("Callback triggered");  // シリアル出力
   const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
 
-  Serial.print("Received command: ");  // 受信したコマンドをシリアル出力
-  Serial.println(msg->data);
+  M5.Lcd.print("Received command: ");  // 受信したコマンドをシリアル出力
+  M5.Lcd.println(msg->data);
 
-  M5.Lcd.clear();  // LCD画面をクリア
+//  M5.Lcd.clear();  // LCD画面をクリア
   M5.Lcd.setCursor(0, 20);  // テキスト表示位置を設定
   switch (msg->data) {
     case 1: // forward
@@ -97,7 +97,8 @@ void setup() {
 	RCCHECK(rcl_init_options_init(&init_options, allocator));
 	RCCHECK(rcl_init_options_set_domain_id(&init_options, 117));		// ドメインIDの設定
 	RCCHECK(rclc_support_init_with_options(&support, 0, NULL, &init_options, &allocator)); // 前のrclc_support_initは削除する
-  RCCHECK(rclc_node_init_default(&node, "m5stack_motor_control", "", &support));
+  RCCHECK(rclc_node_init_default(&node, "subscriber_node", "", &support));
+
 
   RCCHECK(rclc_subscription_init_default(
     &subscriber,
@@ -112,6 +113,6 @@ void setup() {
 }
 
 void loop() {
-  RCCHECK(rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100)));
   delay(10);
+  RCCHECK(rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100)));
 }
