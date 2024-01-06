@@ -91,28 +91,28 @@ void setup() {
 
   allocator = rcl_get_default_allocator();
 
-  RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
+  rclc_support_init(&support, 0, NULL, &allocator);
 
 	rcl_init_options_t init_options = rcl_get_zero_initialized_init_options();
-	RCCHECK(rcl_init_options_init(&init_options, allocator));
-	RCCHECK(rcl_init_options_set_domain_id(&init_options, 117));		// ドメインIDの設定
-	RCCHECK(rclc_support_init_with_options(&support, 0, NULL, &init_options, &allocator)); // 前のrclc_support_initは削除する
-  RCCHECK(rclc_node_init_default(&node, "subscriber_node", "", &support));
+	rcl_init_options_init(&init_options, allocator);
+	rcl_init_options_set_domain_id(&init_options, 117);		// ドメインIDの設定
+	rclc_support_init_with_options(&support, 0, NULL, &init_options, &allocator); // 前のrclc_support_initは削除する
+  rclc_node_init_default(&node, "subscriber_node", "", &support);
 
 
-  RCCHECK(rclc_subscription_init_default(
+  rclc_subscription_init_default(
     &subscriber,
     &node,
     ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
-    "/motor_control"));
+    "/motor_control");
 
 	int callback_size = 1;	// コールバックを行う数
 	executor = rclc_executor_get_zero_initialized_executor();
-  RCCHECK(rclc_executor_init(&executor, &support.context, callback_size, &allocator));
-  RCCHECK(rclc_executor_add_subscription(&executor, &subscriber, &msg, &subscription_callback, ON_NEW_DATA));
+  rclc_executor_init(&executor, &support.context, callback_size, &allocator);
+  rclc_executor_add_subscription(&executor, &subscriber, &msg, &subscription_callback, ON_NEW_DATA);
 }
 
 void loop() {
   delay(10);
-  RCCHECK(rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100)));
+  rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100));
 }
