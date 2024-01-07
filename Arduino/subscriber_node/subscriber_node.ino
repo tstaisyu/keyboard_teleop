@@ -19,6 +19,9 @@ rcl_allocator_t allocator;
 rcl_node_t node;
 rcl_timer_t timer;
 
+rcl_init_options_t init_options; // Humble
+size_t domain_id = 117;
+
 #define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if ((temp_rc != RCL_RET_OK)) {Serial.println("Error in " #fn); return;}}
 #define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){}}
 
@@ -87,29 +90,29 @@ void setup() {
 	// USB経由の場合
 	set_microros_transports();
 
-  delay(2000);
+//  delay(2000);
 
   allocator = rcl_get_default_allocator();
 
-  rclc_support_init(&support, 0, NULL, &allocator);
+  RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
 
-	rcl_init_options_t init_options = rcl_get_zero_initialized_init_options();
-	rcl_init_options_init(&init_options, allocator);
-	rcl_init_options_set_domain_id(&init_options, 117);		// ドメインIDの設定
-	rclc_support_init_with_options(&support, 0, NULL, &init_options, &allocator); // 前のrclc_support_initは削除する
-  rclc_node_init_default(&node, "subscriber_node", "", &support);
+	init_options = rcl_get_zero_initialized_init_options();
+	RCCHECK(rcl_init_options_init(&init_options, allocator));
+	RCCHECK(rcl_init_options_set_domain_id(&init_options, domain_id));		// ドメインIDの設定
+	RCCHECK(rclc_support_init_with_options(&support, 0, NULL, &init_options, &allocator)); // 前のrclc_support_initは削除する
+  RCCHECK(rclc_node_init_default(&node, "subscriber_node", "", &support));
 
 
-  rclc_subscription_init_default(
+  RCCHECK(rclc_subscription_init_default(
     &subscriber,
     &node,
     ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
-    "/motor_control");
+    "/motor_control"));
 
 	int callback_size = 1;	// コールバックを行う数
 	executor = rclc_executor_get_zero_initialized_executor();
-  rclc_executor_init(&executor, &support.context, callback_size, &allocator);
-  rclc_executor_add_subscription(&executor, &subscriber, &msg, &subscription_callback, ON_NEW_DATA);
+  RCCHECK(rclc_executor_init(&executor, &support.context, callback_size, &allocator));
+  RCCHECK(rclc_executor_add_subscription(&executor, &subscriber, &msg, &subscription_callback, ON_NEW_DATA));
 }
 
 void loop() {
