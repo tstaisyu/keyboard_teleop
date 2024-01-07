@@ -34,7 +34,7 @@ CytronMD motor_R(PWM_DIR, motorRPin1, motorRPin2);
 CytronMD motor_L(PWM_DIR, motorLPin1, motorLPin2);
 
 void subscription_callback(const void * msgin) {
-  Serial.println("Callback triggered");  // シリアル出力
+  M5.Lcd.println("Callback triggered");  // LCD出力
   const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
 
   M5.Lcd.print("Received command: ");  // 受信したコマンドをシリアル出力
