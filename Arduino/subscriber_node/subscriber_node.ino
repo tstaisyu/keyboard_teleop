@@ -19,8 +19,8 @@ rcl_allocator_t allocator;
 rcl_node_t node;
 rcl_timer_t timer;
 
-rcl_init_options_t init_options; // Humble
-size_t domain_id = 117;
+//rcl_init_options_t init_options; // Humble
+//size_t domain_id = 117;
 
 #define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if ((temp_rc != RCL_RET_OK)) {Serial.println("Error in " #fn); return;}}
 #define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){}}
@@ -34,6 +34,7 @@ CytronMD motor_R(PWM_DIR, motorRPin1, motorRPin2);
 CytronMD motor_L(PWM_DIR, motorLPin1, motorLPin2);
 
 void subscription_callback(const void * msgin) {
+  M5.Lcd.setCursor(0, 20);  
   M5.Lcd.println("Callback triggered");  // LCD出力
   const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
 
@@ -78,8 +79,8 @@ void subscription_callback(const void * msgin) {
 }
 
 void setup() {
-  Serial.begin(115200);  // シリアル通信の初期化
-  while(!Serial);  // シリアルポートが開くのを待つ
+//  Serial.begin(115200);  // シリアル通信の初期化
+//  while(!Serial);  // シリアルポートが開くのを待つ
 
   M5.begin();
   M5.Lcd.setTextSize(2);
@@ -96,10 +97,10 @@ void setup() {
 
   RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
 
-	init_options = rcl_get_zero_initialized_init_options();
-	RCCHECK(rcl_init_options_init(&init_options, allocator));
-	RCCHECK(rcl_init_options_set_domain_id(&init_options, domain_id));		// ドメインIDの設定
-	RCCHECK(rclc_support_init_with_options(&support, 0, NULL, &init_options, &allocator)); // 前のrclc_support_initは削除する
+	//init_options = rcl_get_zero_initialized_init_options();
+	//RCCHECK(rcl_init_options_init(&init_options, allocator));
+	//RCCHECK(rcl_init_options_set_domain_id(&init_options, domain_id));		// ドメインIDの設定
+	//RCCHECK(rclc_support_init_with_options(&support, 0, NULL, &init_options, &allocator)); // 前のrclc_support_initは削除する
   RCCHECK(rclc_node_init_default(&node, "subscriber_node", "", &support));
 
 
@@ -110,12 +111,12 @@ void setup() {
     "/motor_control"));
 
 	int callback_size = 1;	// コールバックを行う数
-	executor = rclc_executor_get_zero_initialized_executor();
+//	executor = rclc_executor_get_zero_initialized_executor();
   RCCHECK(rclc_executor_init(&executor, &support.context, callback_size, &allocator));
   RCCHECK(rclc_executor_add_subscription(&executor, &subscriber, &msg, &subscription_callback, ON_NEW_DATA));
 }
 
 void loop() {
-  delay(10);
-  rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100));
+  delay(100);
+  RCCHECK(rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100)));
 }
