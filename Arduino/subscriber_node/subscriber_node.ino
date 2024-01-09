@@ -19,8 +19,8 @@ rcl_allocator_t allocator;
 rcl_node_t node;
 rcl_timer_t timer;
 
-//rcl_init_options_t init_options; // Humble
-//size_t domain_id = 117;
+rcl_init_options_t init_options; // Humble
+size_t domain_id = 117;
 
 #define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if ((temp_rc != RCL_RET_OK)) {Serial.println("Error in " #fn); return;}}
 #define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){}}
@@ -87,9 +87,9 @@ void setup() {
   M5.Lcd.setCursor(0, 0);  // ステータスメッセージの位置を設定
   M5.Lcd.print("micro ROS2 M5Stack START\n");  
 	// Wi-Fi経由の場合
-	set_microros_wifi_transports("Buffalo-G-1A30", "jpiiyb6rs5bpd", "192.168.11.6", 8888);
+	//set_microros_wifi_transports("Buffalo-G-1A30", "jpiiyb6rs5bpd", "192.168.11.6", 8888);
 	// USB経由の場合
-	//set_microros_transports();
+	set_microros_transports();
 
 //  delay(2000);
 
