@@ -41,7 +41,7 @@ void subscription_callback(const void * msgin) {
   M5.Lcd.print("Received command: ");  // 受信したコマンドをシリアル出力
   M5.Lcd.println(msg->data);
 
-//  M5.Lcd.clear();  // LCD画面をクリア
+  M5.Lcd.clear();  // LCD画面をクリア
   M5.Lcd.setCursor(0, 20);  // テキスト表示位置を設定
   switch (msg->data) {
     case 1: // forward
@@ -87,9 +87,9 @@ void setup() {
   M5.Lcd.setCursor(0, 0);  // ステータスメッセージの位置を設定
   M5.Lcd.print("micro ROS2 M5Stack START\n");  
 	// Wi-Fi経由の場合
-	//set_microros_wifi_transports("SSID", "PWD", "IP", Port);
+	set_microros_wifi_transports("Buffalo-G-1A30", "jpiiyb6rs5bpd", "192.168.11.6", 8888);
 	// USB経由の場合
-	set_microros_transports();
+	//set_microros_transports();
 
 //  delay(2000);
 
