@@ -95,12 +95,12 @@ void setup() {
 
   allocator = rcl_get_default_allocator();
 
-  RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
+  //RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
 
-	//init_options = rcl_get_zero_initialized_init_options();
-	//RCCHECK(rcl_init_options_init(&init_options, allocator));
-	//RCCHECK(rcl_init_options_set_domain_id(&init_options, domain_id));		// ドメインIDの設定
-	//RCCHECK(rclc_support_init_with_options(&support, 0, NULL, &init_options, &allocator)); // 前のrclc_support_initは削除する
+	init_options = rcl_get_zero_initialized_init_options();
+	RCCHECK(rcl_init_options_init(&init_options, allocator));
+	RCCHECK(rcl_init_options_set_domain_id(&init_options, domain_id));		// ドメインIDの設定
+	RCCHECK(rclc_support_init_with_options(&support, 0, NULL, &init_options, &allocator)); // 前のrclc_support_initは削除する
   RCCHECK(rclc_node_init_default(&node, "subscriber_node", "", &support));
 
 
